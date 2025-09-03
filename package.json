@@ -1,0 +1,19 @@
+{
+    "name": "swap-sdk-examples",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "clean": "rimraf dist",
+        "build:vanilla": "mkdirp dist/vanilla-js-example && copyfiles -u 1 vanilla-js-example/**/* dist/vanilla-js-example",
+        "build:react": "cd react-example && npm install && npm run build && cd .. && mkdirp dist/react-example && copyfiles -u 2 react-example/dist/**/* dist/react-example",
+        "build": "run-s clean build:vanilla build:react",
+        "deploy": "run-s build && gh-pages -d dist"
+    },
+    "devDependencies": {
+        "copyfiles": "^2.4.1",
+        "gh-pages": "^6.1.1",
+        "mkdirp": "^3.0.1",
+        "npm-run-all": "^4.1.5",
+        "rimraf": "^5.0.5"
+    }
+}

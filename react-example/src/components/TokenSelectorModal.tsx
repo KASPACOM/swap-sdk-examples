@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { Erc20Token } from "@kaspacom/swap-sdk";
 
 export function TokenSelectorModal({ open, tokens, onClose, onSelect }: { open: boolean; tokens: Erc20Token[]; onClose: () => void; onSelect: (t: Erc20Token) => void }) {

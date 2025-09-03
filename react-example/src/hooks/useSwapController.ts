@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { SwapControllerInput, SwapControllerOutput, SwapSdkController } from "@kaspacom/swap-sdk";
 import { createKaspaComSwapController, DEFAULT_SWAP_SETTINGS } from "@kaspacom/swap-sdk";
 
