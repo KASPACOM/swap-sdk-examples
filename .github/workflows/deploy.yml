@@ -31,8 +31,8 @@ jobs:
 
       - name: Copy vanilla example
         run: |
-          mkdir -p dist/vanilla
-          cp -r vanilla-js-example/* dist/vanilla/
+          mkdir -p dist/vanilla-js-example
+          cp -r vanilla-js-example/* dist/vanilla-js-example/
 
       - name: Build React example
         run: |
@@ -41,7 +41,8 @@ jobs:
           npm run build
           cd ..
           mkdir -p dist/react-example
-          cp -r react-example/build/* dist/react-example/
+          cp -r react-example/dist/* dist/react-example/
+
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
