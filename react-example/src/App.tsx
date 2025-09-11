@@ -28,6 +28,9 @@ function App() {
   const [loadingTokens, setLoadingTokens] = useState<boolean>(false);
 
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
+  const [partnerFee, setPartnerFee] = useState<number | undefined>();
+
+  controller.getPartnerFee().then(setPartnerFee);
 
   useEffect(() => {
     if (!controller) return;
@@ -101,6 +104,11 @@ function App() {
               )}
             </div>
           )}
+
+          <div>Uniswap protocol fee: 1%</div>
+          <div>
+            Partner Fee: {partnerFee == undefined ? "Loading..." : partnerFee + "%"}
+          </div>
 
           <button
             disabled={

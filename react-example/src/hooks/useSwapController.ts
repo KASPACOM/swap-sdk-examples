@@ -15,6 +15,7 @@ export function useSwapController() {
   createKaspaComSwapController({
     networkConfig: "kasplex-testnet",
     onChange: async (nextState: any) => setState(nextState),
+    // partnerKey: '0x0000000000000000000000000000000000000000000000000000000000000000'
   })
 );
 
