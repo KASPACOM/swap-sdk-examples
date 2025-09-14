@@ -22,6 +22,7 @@ function App() {
     disconnectWallet,
     inputState,
     walletAddress,
+    partnerKey,
   } = useSwapController();
 
   const [allTokens, setAllTokens] = useState<Erc20Token[]>([]);
@@ -29,8 +30,37 @@ function App() {
 
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [partnerFee, setPartnerFee] = useState<number | undefined>();
+  const [partnerKeyInput, setPartnerKeyInput] = useState<string>("");
 
   controller.getPartnerFee().then(setPartnerFee);
+
+  const changePartnerKey = (addPartnerKey: boolean) => {
+    if (addPartnerKey) {
+      if (!/^0x[0-9a-fA-F]{64}$/.test(partnerKeyInput)) {
+        alert("Invalid partner key");
+        return;
+      }
+
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.set("partnerKey", partnerKeyInput?.toString());
+      window.history.replaceState({}, "", currentUrl.toString());
+      window.location.reload();
+    } else {
+      window.location.reload();
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.delete("partnerKey");
+      window.history.replaceState({}, "", currentUrl.toString());
+      window.location.reload();
+    }
+  };
+
+  const bytes32ToString = (hex: string) => {
+    const bytes = hex
+      .slice(2)
+      .match(/.{1,2}/g)
+      ?.map((x) => parseInt(x, 16));
+    return new TextDecoder().decode(new Uint8Array(bytes!)).replace(/\0+$/, "");
+  };
 
   useEffect(() => {
     if (!controller) return;
@@ -107,7 +137,8 @@ function App() {
 
           <div>Uniswap protocol fee: 1%</div>
           <div>
-            Partner Fee: {partnerFee == undefined ? "Loading..." : partnerFee + "%"}
+            Partner Fee:{" "}
+            {partnerFee == undefined ? "Loading..." : partnerFee + "%"}
           </div>
 
           <button
@@ -156,6 +187,52 @@ function App() {
           setSettingsOpen(false);
         }}
       />
+
+      {partnerKey ? (
+        <div
+          style={{
+            width: 335,
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+            alignItems: "center",
+            marginTop: 16,
+          }}
+        >
+          <div style={{ wordBreak: "break-all" }}>
+            Partner Key: {partnerKey} ({bytes32ToString(partnerKey)})
+          </div>
+          <div>
+            <button onClick={() => changePartnerKey(false)}>
+              Remove Partner Key
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div
+            style={{
+              display: "flex",
+              gap: 8,
+              alignItems: "center",
+              marginTop: 16,
+            }}
+          >
+            <label>Set Partner Key:</label>
+            <input
+              type="text"
+              placeholder="0x0000000000000000000000000000000000000000000000000000000000000000 "
+              value={partnerKeyInput}
+              onChange={(e) => setPartnerKeyInput(e.target.value)}
+              style={{ padding: 8 }}
+            />
+            <button onClick={() => changePartnerKey(true)}>Save</button>
+          </div>
+          <div style={{ color: "#aaa", fontSize: 14, marginTop: 8 }}>
+            Partner fee will be updated after saving the partner key.
+          </div>
+        </div>
+      )}
     </div>
   );
 }

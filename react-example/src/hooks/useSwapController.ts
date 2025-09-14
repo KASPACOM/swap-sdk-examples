@@ -3,6 +3,9 @@ import type { SwapControllerInput, SwapControllerOutput, SwapSdkController } fro
 import { createKaspaComSwapController, DEFAULT_SWAP_SETTINGS } from "@kaspacom/swap-sdk";
 
 export function useSwapController() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const partnerKey = urlParams.get("partnerKey") || undefined;
+
   const [state, setState] = useState<SwapControllerOutput | null>(null);
   const [inputState, setInputState] = useState<SwapControllerInput>({
     settings: DEFAULT_SWAP_SETTINGS,
@@ -12,12 +15,12 @@ export function useSwapController() {
   const [evenstSetted, setEventSetted] = useState<boolean>(false);
 
   const [controller] = useState<SwapSdkController>(() =>
-  createKaspaComSwapController({
-    networkConfig: "kasplex-testnet",
-    onChange: async (nextState: any) => setState(nextState),
-    // partnerKey: '0x0000000000000000000000000000000000000000000000000000000000000000'
-  })
-);
+    createKaspaComSwapController({
+      networkConfig: "kasplex-testnet",
+      onChange: async (nextState: any) => setState(nextState),
+      partnerKey: partnerKey,
+    })
+  );
 
 
   const actions = useMemo(() => {
@@ -76,5 +79,5 @@ export function useSwapController() {
     };
   }, []);
 
-  return { controller, state, connectWallet: actions.connectWallet, disconnectWallet: actions.disconnectWallet, setInput: actions.setInput, inputState, walletAddress } as const;
+  return { controller, state, connectWallet: actions.connectWallet, disconnectWallet: actions.disconnectWallet, setInput: actions.setInput, inputState, walletAddress, partnerKey } as const;
 } 
