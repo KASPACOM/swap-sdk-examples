@@ -17,7 +17,10 @@ export function useSwapController() {
   const [controller] = useState<SwapSdkController>(() =>
     createKaspaComSwapController({
       networkConfig: "kasplex-testnet",
-      onChange: async (nextState: any) => setState(nextState),
+      onChange: async (nextState: any) => {
+        console.log("useSwapController: state changed to", nextState);
+        setState(nextState);
+      },
       partnerKey: partnerKey,
     })
   );
